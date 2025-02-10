@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 const About = () => {
     return(
         <div>
@@ -6,6 +7,7 @@ const About = () => {
                 {" "}
                 This is the Namaste react by meeeeeeeeeee...............
             </p>
+            <Outlet/>
         </div>
     )
 

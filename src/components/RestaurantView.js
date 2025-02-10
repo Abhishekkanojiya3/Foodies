@@ -2,50 +2,65 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Shimmer from "./Shimmer";
 import { CDN_URL } from "../utils/constants";
+import useRestaurantView from "../utils/useRestaurantView";
 
 const RestaurantView = () => {
   const { id } = useParams();
-  console.log(id);
-  const [restaurantData, setRestaurantData] = useState(null);
-  const [menuItems, setMenuItems] = useState(null);
+  const { restaurantData, menuItems } = useRestaurantView(id);
 
-  useEffect(() => {
-    getRestaurantData();
-  }, []);
-
-  const getRestaurantData = async () => {
-    try {
-      const data = await fetch(
-        `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.642752063660424&lng=77.29424821849668&restaurantId=${id}`
-      );
-      const json = await data.json();
-      const restaurantDataa = json?.data?.cards[2].card.card.info || [];
-      console.log(restaurantDataa);
-      console.log(json);
-      const menuItemss =
-        json?.data?.cards[4].groupedCard.cardGroupMap.REGULAR.cards[1].card.card
-          .itemCards || [];
-      setMenuItems(menuItemss);
-      console.log("Menu Items:", menuItems);
-
-      setRestaurantData(restaurantDataa);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   if (!restaurantData) {
     return <Shimmer />;
   }
+
   return (
-    <div className="res-view">
-      <h1>{restaurantData.name}</h1>
-      <img className="image" src={CDN_URL + restaurantData.cloudinaryImageId} alt="logo" />
-      <div className="menu">
-        <ul>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {/* Restaurant Header Section */}
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="flex flex-col md:flex-row items-center p-6">
+          <img
+            className="w-48 h-48 object-cover rounded-lg shadow-md"
+            src={CDN_URL + restaurantData.cloudinaryImageId}
+            alt={restaurantData.name}
+          />
+          <div className="mt-6 md:mt-0 md:ml-6 text-center md:text-left">
+            <h1 className="text-3xl font-bold text-gray-800">
+              {restaurantData.name}
+            </h1>
+            <p className="text-gray-600 mt-2">
+              {restaurantData.cuisines?.join(", ")}
+            </p>
+            <p className="text-gray-600 mt-1">
+              {restaurantData.areaName}, {restaurantData.city}
+            </p>
+            <p className="text-gray-600 mt-1">
+              Rating: {restaurantData.avgRating} ⭐
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Menu Items Section */}
+      <div className="max-w-4xl mx-auto mt-8">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Menu</h2>
+        <ul className="space-y-4">
           {menuItems.map((menu) => (
-            <li key={menu.card.info.id}>
-              {menu.card.info.name} - {"Rs."}{" "}
-              {menu.card.info.price / 100 || menu.card.info.defaultPrice / 100}
+            <li
+              key={menu.card.info.id}
+              className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {menu.card.info.name}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {menu.card.info.description}
+                  </p>
+                </div>
+                <p className="text-lg font-semibold text-gray-800 whitespace-nowrap">
+                  Rs. {menu.card.info.price / 100 || menu.card.info.defaultPrice / 100}
+                </p>
+              </div>
             </li>
           ))}
         </ul>
@@ -53,4 +68,5 @@ const RestaurantView = () => {
     </div>
   );
 };
+
 export default RestaurantView;

@@ -1,4 +1,4 @@
-import "./App.css";
+import "./index.css";
 import { useState } from "react";
 import Header from "./components/Header";
 import { CDN_URL } from "./utils/constants";
@@ -9,6 +9,7 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import RestaurantView from "./components/RestaurantView";
 import Login from "./components/Login";
+import Profile from "./components/Profile";
 
 function Footer() {
   return (
@@ -26,7 +27,9 @@ function App() {
       <Header />
         <Routes>
             <Route path="/" element={<Body />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/about" element={<About />} >
+            <Route path ="profile" element = {<Profile/>} />
+            </Route>
             <Route path="/contact" element={<Contact />} />
             <Route path = "/login" element = {<Login/>} />
             <Route path="/restaurant/:id" element={<RestaurantView />} />
