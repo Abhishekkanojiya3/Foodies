@@ -1,4 +1,6 @@
 import "./index.css";
+import { ThemeProvider } from "./utils/themeContext";
+import LanguageProvider from "./utils/languageContext";
 import { useState } from "react";
 import Header from "./components/Header";
 import { CDN_URL } from "./utils/constants";
@@ -22,6 +24,8 @@ function Footer() {
 function App() {
 
   return (
+    <LanguageProvider>
+    <ThemeProvider>
     <BrowserRouter>
       <div className="Appp">
       <Header />
@@ -37,6 +41,8 @@ function App() {
        <Footer />
       </div>
     </BrowserRouter>
+    </ThemeProvider>
+    </LanguageProvider>
   );
 }
 

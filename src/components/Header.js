@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { logo_url } from "../utils/constants";
+import { useContext } from "react";
+import ThemeContext from "../utils/themeContext";
 import { Link } from "react-router-dom";
 
 function Header() {
+  const {theme, toggleTheme} = useContext(ThemeContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
@@ -37,6 +40,11 @@ function Header() {
           </li>
         </ul>
       </nav>
+
+      {/* Theme Toggle */}
+      <button onClick={toggleTheme} className="text-gray-700 hover:text-blue-500 transition-colors">
+        {theme === "light" ? "Dark Mode" : "Light Mode"}
+      </button>
 
       {/* Login/Logout Button */}
       <button
